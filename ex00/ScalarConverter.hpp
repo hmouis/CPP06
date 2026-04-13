@@ -6,14 +6,16 @@
 #include <iostream>
 #include <cstring>
 #include <cctype>
+#include <cerrno>
 
 class ScalarConverter
 {
     private:
-        bool ConvertToInt(std::string &str);
-        bool ConvertToChar(std::string &str);
-        bool ConvertToFloat(std::string &str);
-        bool ConvertToDouble(std::string &str);
+        static bool PseudoLiterals(std::string &str);
+        static bool ConvertToInt(std::string &str);
+        static bool ConvertToChar(std::string &str);
+        static bool ConvertToFloat(std::string &str);
+        static bool ConvertToDouble(std::string &str);
 
     public:
         ScalarConverter();
