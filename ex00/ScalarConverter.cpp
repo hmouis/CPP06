@@ -21,6 +21,7 @@ bool ScalarConverter::ConvertToChar(std::string &str)
         return false;
     std::cout << "char: " << static_cast<char>(*endptr) << std::endl;
     std::cout << "int: " << static_cast<int>(*endptr) << std::endl;
+    std::cout << std::fixed << std::setprecision(1);
     std::cout << "float: " << static_cast<float>(*endptr) << "f" << std::endl;
     std::cout << "double: " << static_cast<double>(*endptr) << std::endl;
 
@@ -46,6 +47,7 @@ bool ScalarConverter::ConvertToInt(std::string &str)
     else
         std::cout << "char: impossible\n";
     std::cout << "int: " << base << std::endl;
+    std::cout << std::fixed << std::setprecision(1);
     std::cout << "float: " << static_cast<float>(base) << "f" << std::endl;
     std::cout << "double: " << static_cast<double>(base) << std::endl;
     
@@ -58,10 +60,20 @@ bool ScalarConverter::ConvertToFloat(std::string &str)
     errno = 0;
 
     value = strtof(str.c_str(), &endptr);
-    if (errno == ERANGE || endptr == str || (*endptr == 'f' && *(endptr + 1) != '\0'))
+    if (errno == ERANGE || endptr == str || std::strlen(endptr) != 1 || *endptr != 'f')
         return false;
-    std::cout << "char: " << static_cast<char>(value) << std::endl;
-    std::cout << "int: " << static_cast<int>(value) << std::endl;
+    if (value >= 0 && value <= 127){
+        if (std::isprint(value))
+            std::cout << "char: " << static_cast<char>(value) << std::endl;
+        else
+            std::cout << "char: Non displayable\n";
+    }
+    else
+        std::cout << "char: impossible\n";
+    if (static_cast<double>(value) >= -2147483648 && static_cast<double>(value) <= 2147483647)
+        std::cout << "int: " << static_cast<int>(value) << std::endl;
+    else
+        std::cout << "int: impossible\n";
     std::cout << "float: " << value << "f" << std::endl;
     std::cout << "double: " << static_cast<double>(value) << std::endl;
 
@@ -74,14 +86,21 @@ bool ScalarConverter::ConvertToDouble(std::string &str)
     errno = 0;
 
     value = strtod(str.c_str(), &endptr);
-    if (errno == ERANGE || endptr == str)
+    if (errno == ERANGE || *endptr)
         return false;
-    char c = static_cast<char>(value);
-    std::cout << "char: " << c << std::endl;
-    int i = static_cast<int>(value);
-    std::cout << "int: " << i << std::endl;
-    float f = static_cast<float>(value);
-    std::cout << "float: " << f << "f" << std::endl;
+    if (value >= 0 && value <= 127){
+        if (std::isprint(value))
+            std::cout << "char: " << static_cast<char>(value) << std::endl;
+        else
+            std::cout << "char: Non displayable\n";
+    }
+    else
+        std::cout << "char: impossible\n";
+    if (value >= -2147483648 && value <= 2147483647)
+        std::cout << "int: " << static_cast<int>(value) << std::endl;
+    else
+        std::cout << "int: impossible\n";
+    std::cout << "float: " << static_cast<float>(value) << "f" << std::endl;
     std::cout << "double: " << value << std::endl;
 
     return true;

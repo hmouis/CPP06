@@ -7,6 +7,8 @@
 #include <cstring>
 #include <cctype>
 #include <cerrno>
+#include <iomanip>
+
 
 class ScalarConverter
 {
