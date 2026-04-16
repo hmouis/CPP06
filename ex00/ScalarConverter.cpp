@@ -62,6 +62,10 @@ bool ScalarConverter::ConvertToFloat(std::string &str)
     value = strtof(str.c_str(), &endptr);
     if (errno == ERANGE || endptr == str || std::strlen(endptr) != 1 || *endptr != 'f')
         return false;
+    if (str[str.size() - 2] == '.' || (std::isdigit(str[str.size() - 2]) && str.find('.') == std::string::npos)){
+        std::cout << "Invalid input\n";
+        return true;
+    }
     if (value >= 0 && value <= 127){
         if (std::isprint(value))
             std::cout << "char: " << static_cast<char>(value) << std::endl;
@@ -74,6 +78,7 @@ bool ScalarConverter::ConvertToFloat(std::string &str)
         std::cout << "int: " << static_cast<int>(value) << std::endl;
     else
         std::cout << "int: impossible\n";
+    std::cout << std::fixed << std::setprecision(1);
     std::cout << "float: " << value << "f" << std::endl;
     std::cout << "double: " << static_cast<double>(value) << std::endl;
 
@@ -86,20 +91,25 @@ bool ScalarConverter::ConvertToDouble(std::string &str)
     errno = 0;
 
     value = strtod(str.c_str(), &endptr);
-    if (errno == ERANGE || *endptr)
+    if (errno == ERANGE)
         return false;
+    else if (*endptr){
+        std::cout << "Invalid input\n";
+        return true;
+    }
+    else
     if (value >= 0 && value <= 127){
         if (std::isprint(value))
             std::cout << "char: " << static_cast<char>(value) << std::endl;
         else
             std::cout << "char: Non displayable\n";
     }
-    else
         std::cout << "char: impossible\n";
     if (value >= -2147483648 && value <= 2147483647)
         std::cout << "int: " << static_cast<int>(value) << std::endl;
     else
         std::cout << "int: impossible\n";
+    std::cout << std::fixed << std::setprecision(1);
     std::cout << "float: " << static_cast<float>(value) << "f" << std::endl;
     std::cout << "double: " << value << std::endl;
 
